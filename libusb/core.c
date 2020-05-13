@@ -20,6 +20,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+// 5mdlc: check flatpak enviroment ...
+#include "flatpak-portal-libusb.h"
+#include "dbus_libusb.h"
+
 #include "libusbi.h"
 #include "hotplug.h"
 #include "version.h"
@@ -804,6 +808,12 @@ ssize_t API_EXPORTED libusb_get_device_list(libusb_context *ctx,
 	int r = 0;
 	ssize_t i, len;
 
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_get_device_list(ctx, list));\n");
+		return(fp_libusb_get_device_list(ctx, list));
+	}//endif true
+
 	usbi_dbg(" ");
 
 	if (!discdevs)
@@ -872,6 +882,13 @@ void API_EXPORTED libusb_free_device_list(libusb_device **list,
 	if (!list)
 		return;
 
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_free_device_list(list, unref_devices));\n");
+		fp_libusb_free_device_list(list, unref_devices);
+		return;
+	}//endif true
+
 	if (unref_devices) {
 		int i = 0;
 		struct libusb_device *dev;
@@ -889,6 +906,12 @@ void API_EXPORTED libusb_free_device_list(libusb_device **list,
  */
 uint8_t API_EXPORTED libusb_get_bus_number(libusb_device *dev)
 {
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_get_bus_number(dev));\n");
+		return(fp_libusb_get_bus_number(dev));
+	}//endif true
+
 	return dev->bus_number;
 }
 
@@ -980,6 +1003,12 @@ libusb_device * LIBUSB_CALL libusb_get_parent(libusb_device *dev)
  */
 uint8_t API_EXPORTED libusb_get_device_address(libusb_device *dev)
 {
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_get_device_address(dev));\n");
+		return(fp_libusb_get_device_address(dev));
+	}//endif true
+
 	return dev->device_address;
 }
 
@@ -1315,6 +1344,12 @@ int API_EXPORTED libusb_wrap_sys_device(libusb_context *ctx, intptr_t sys_dev,
 int API_EXPORTED libusb_open(libusb_device *dev,
 	libusb_device_handle **dev_handle)
 {
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_open(dev, dev_handle));\n");
+		return(fp_libusb_open(dev, dev_handle));
+	}//endif true
+
 	struct libusb_context *ctx = DEVICE_CTX(dev);
 	struct libusb_device_handle *_dev_handle;
 	size_t priv_size = usbi_backend.device_handle_priv_size;
@@ -2269,6 +2304,12 @@ int API_EXPORTED libusb_init(libusb_context **context)
 	static int first_init = 1;
 	int r = 0;
 
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_init(context));\n");
+		return(fp_libusb_init(context));
+	}//endif true
+
 	usbi_mutex_static_lock(&default_context_lock);
 
 	if (!timestamp_origin.tv_sec) {
@@ -2377,6 +2418,13 @@ void API_EXPORTED libusb_exit(libusb_context *ctx)
 	struct libusb_device *dev, *next;
 	struct timeval tv = { 0, 0 };
 	int destroying_default_context = 0;
+
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_init(context));\n");
+		fp_libusb_exit(ctx);
+		return;
+	}//endif true
 
 	usbi_dbg(" ");
 

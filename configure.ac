@@ -345,8 +345,12 @@ SHARED_CFLAGS="-Wall -Wextra -Wshadow -Wunused -Wwrite-strings -Werror=format-se
 AM_CPPFLAGS="${EXTRA_CPPFLAGS}"
 AC_SUBST(AM_CPPFLAGS)
 
-AM_CFLAGS="-std=${c_dialect}11 ${EXTRA_CFLAGS} ${SHARED_CFLAGS}"
+#AM_CFLAGS="-std=${c_dialect}11 ${EXTRA_CFLAGS} ${SHARED_CFLAGS}"
+CFLAGS_GLIB="-I/usr/include/glib-2.0 -I/usr/lib64/glib-2.0/include -I/usr/include/dbus-1.0 -I/usr/lib64/dbus-1.0/include/"
+AM_CFLAGS="${CFLAGS_GLIB} -std=${c_dialect}11 ${EXTRA_CFLAGS} ${SHARED_CFLAGS}"
 AC_SUBST(AM_CFLAGS)
+
+LT_LDFLAGS="${LTLDFLAGS} -ldbus-1 -lgdk-3"
 
 AM_CXXFLAGS="-std=${c_dialect}++11 ${EXTRA_CFLAGS} ${SHARED_CFLAGS} -Wmissing-declarations"
 AC_SUBST(AM_CXXFLAGS)

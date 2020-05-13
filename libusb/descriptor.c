@@ -23,6 +23,11 @@
 
 #include <string.h>
 
+// 5mdlc
+#include <stdio.h>
+#include "libusb.h"
+#include "flatpak-portal-libusb.h"
+
 #define DESC_HEADER_LENGTH	2
 
 /** @defgroup libusb_desc USB descriptors
@@ -497,6 +502,18 @@ static int raw_desc_to_config(struct libusb_context *ctx,
 int API_EXPORTED libusb_get_device_descriptor(libusb_device *dev,
 	struct libusb_device_descriptor *desc)
 {
+	// 5mdlc: check flatpak enviroment ...
+	if(fp_check_enviroment()){
+		//fprintf(stderr, "return(fp_libusb_get_device_descriptor(0x%lx, 0x%lx));\n", 
+			//(unsigned long)dev, (unsigned long)desc);
+		/*
+		int rc = fp_libusb_get_device_descriptor(dev, desc);
+		fprintf(stderr, "return(fp_libusb_get_device_descriptor(0x%lx, 0x%lx)) = %d;\n", dev, desc, rc);
+		return(rc);
+		*/
+		return(fp_libusb_get_device_descriptor(dev, desc));
+	}//endif true
+
 	usbi_dbg(" ");
 	static_assert(sizeof(dev->device_descriptor) == LIBUSB_DT_DEVICE_SIZE,
 		      "struct libusb_device_descriptor is not expected size");
